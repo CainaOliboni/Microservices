@@ -3,6 +3,7 @@ package com.cainaoliboni.crud.services;
 import com.cainaoliboni.crud.data.vo.ProdutoVO;
 import com.cainaoliboni.crud.entity.Produto;
 import com.cainaoliboni.crud.exception.ResourceNotFoundException;
+import com.cainaoliboni.crud.message.ProdutoSendMessage;
 import com.cainaoliboni.crud.repository.ProdutoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +15,17 @@ import java.util.Optional;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final ProdutoSendMessage produtoSendMessage;
 
-    public ProdutoService(ProdutoRepository produtoRepository){
+    public ProdutoService(ProdutoRepository produtoRepository, ProdutoSendMessage produtoSendMessage){
         this.produtoRepository = produtoRepository;
+        this.produtoSendMessage = produtoSendMessage;
     }
 
     public ProdutoVO create (ProdutoVO produtoVO){
-        return ProdutoVO.create(produtoRepository.save(Produto.create(produtoVO)));
+        ProdutoVO produtoVOCreated = ProdutoVO.create(produtoRepository.save(Produto.create(produtoVO)));
+        produtoSendMessage.sendMessage(produtoVOCreated);
+        return produtoVOCreated;
     }
 
     public Page<ProdutoVO> findAll(Pageable pageable){
