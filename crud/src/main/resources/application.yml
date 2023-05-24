@@ -29,3 +29,8 @@ crud:
   rabbitmq:
     exchange: crud.exchange
     routing-key: crud.produto.routing-key
+
+security:
+  jwt:
+    token:
+      secret-key: 'p3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C'
